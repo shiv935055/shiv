@@ -1,0 +1,60 @@
+# Define environment variables
+substitutions:           
+  _REPOSITORY: 'tf-test'                                       
+  _BRANCH_NAME: '${BRANCH_NAME}'       
+  _LOCATION: 'asia-south1'     
+  _APP: 'tf-test-run-app'
+  _IMAGE_TAG: '${_BRANCH_NAME}-${SHORT_SHA}'
+
+
+
+ # Options
+options:
+  logging: 'CLOUD_LOGGING_ONLY'
+  #workerPool: 'projects/dev-tsp/locations/asia-south1/workerPools/dev-tsp-cloud-build-private-pool'
+
+steps:
+
+  # Step 1: Build and Push Docker Image with Unique Tag
+  - name: 'gcr.io/cloud-builders/docker'
+    id: Build and Push Image
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "Building Docker image with tag: $_IMAGE_TAG"
+        docker build -t "$_LOCATION-docker.pkg.dev/$PROJECT_ID/$_REPOSITORY/$_APP:$_IMAGE_TAG" .
+        docker push "$_LOCATION-docker.pkg.dev/$PROJECT_ID/$_REPOSITORY/$_APP:$_IMAGE_TAG"
+
+  # Step 2: Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: Deploy to Cloud Run
+    args:
+      - 'gcloud'
+      - 'run'
+      - 'deploy'
+      - '$_APP'  # The name of your Cloud Run service
+      - '--image'
+      - "$_LOCATION-docker.pkg.dev/$PROJECT_ID/$_REPOSITORY/$_APP:$_IMAGE_TAG"
+      - '--region'
+      - '$_LOCATION'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'  # Optional: Allows unauthenticated access
+
+  # Step 3: Add IAM policy binding to allow public access
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'beta'
+      - 'run'
+      - 'services'
+      - 'add-iam-policy-binding'
+      - '${_APP}'
+      - '--region'
+      - '${_LOCATION}'
+      - '--member'
+      - 'allUsers'
+      - '--role'
+      - 'roles/run.invoker'
+
+ 
