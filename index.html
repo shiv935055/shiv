@@ -1,0 +1,40 @@
+<html>
+<head>
+    <title>Deployment 4 - Cloud Run</title>
+    <style>
+        body {
+            font-family: 'Google Sans', Arial, sans-serif;
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .cloud-run-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M15.5 6.5A3.5 3.5 0 1 0 12 10l-1.27 1.27A3.5 3.5 0 1 0 15.5 6.5M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m-2 8.5a2.5 2.5 0 0 1 2.5 2.5a2.5 2.5 0 0 1-2.5 2.5a2.5 2.5 0 0 1-2.5-2.5a2.5 2.5 0 0 1 2.5-2.5Z"/></svg>');
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cloud-run-logo"></div>
+        <h1>Deployment 4 - Running on Cloud Run</h1>
+        <p>This Nginx instance is deployed serverlessly on Google Cloud Platform</p>
+        <p>Health check endpoint: <code>/health4</code></p>
+    </div>
+</body>
+</html>
